@@ -16,7 +16,7 @@ function ejecutarInsercion($con, $tabla, $datos) {
         $sql = "INSERT INTO usuarios (nombre, contraseña) VALUES ('$nombre', '$contra')";
     } else {
         $titulo = mysqli_real_escape_string($con, $datos['titulo']);
-        $desc = mysqli_real_escape_string($con, $datos['descripcion'])
+        $desc = mysqli_real_escape_string($con, $datos['descripcion']); // Corrección de sintaxis añadida
         $sql = "INSERT INTO series (titulo, descripcion) VALUES ('$titulo', '$desc')";
     }
     return mysqli_query($con, $sql);
@@ -26,7 +26,7 @@ function ejecutarInsercion($con, $tabla, $datos) {
 $mensaje = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tabla'])) {
     if (ejecutarInsercion($conexion, $_POST['tabla'], $_POST)) {
-        $mensaje = "<p style='color:green;'>Datos guardados correctamente en " . $_POST['tabla'] . "</p>";
+        $mensaje = "<p style='color:green;'>Datos guardados correctamente en " . htmlspecialchars($_POST['tabla']) . "</p>";
     } else {
         $mensaje = "<p style='color:red;'>Error al guardar: " . mysqli_error($conexion) . "</p>";
     }
@@ -57,31 +57,30 @@ $opcion = $_GET['opcion'] ?? '';
     <nav>
         <strong>Selecciona tabla:</strong> 
         <a href="?opcion=usuarios">Usuarios</a> | 
-        <a href="?opcion=series">Series</a>
+        <a href="?opcion=series">Series</a> |
+        <a href="ver.php">Ver datos</a>
     </nav>
 
     <?php echo $mensaje; ?>
 
-    <!--Insert usuarios -->
     <?php if ($opcion == 'usuarios'): ?>
         <div class="formulario">
             <h3>Nuevo Usuario</h3>
             <form method="POST">
                 <input type="hidden" name="tabla" value="usuarios">
-                Nombre: <input type="text" name="nombre" required>
+                Nombre: <input type="text" name="nombre" required maxlength="20">
                 Contraseña: <input type="password" name="contra" required>
                 <button type="submit">Guardar Usuario</button>
             </form>
         </div>
         
-    <!--Insert series -->
     <?php elseif ($opcion == 'series'): ?>
         <div class="formulario">
             <h3>Nueva Serie</h3>
             <form method="POST">
                 <input type="hidden" name="tabla" value="series">
-                Título de la serie: <input type="text" name="titulo" required>
-                Breve descripción: <input type="text" name="desc" required>
+                Título de la serie: <input type="text" name="titulo" required maxlength="20">
+                Breve descripción: <input type="text" name="descripcion" required maxlength="100">
                 <button type="submit">Guardar Serie</button>
             </form>
         </div>

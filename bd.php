@@ -9,7 +9,7 @@
 <body>
 <?php
 // Configuración de conexión
-$servidor = 'localhost:3306';
+$servidor = 'localhost:3307';
 $usuario = 'root';
 $password = '';
 

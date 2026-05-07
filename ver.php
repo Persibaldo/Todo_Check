@@ -6,7 +6,7 @@ if (!in_array($tabla, ['usuarios', 'series'], true)) {
     $tabla = 'usuarios';
 }
 
-$conexion = mysqli_connect('localhost:3306', 'root', '', 'todo_check');
+$conexion = mysqli_connect('localhost:3307', 'root', '', 'todo_check');
 
 // Verificar conexión
 if (!$conexion) {

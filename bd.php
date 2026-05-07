@@ -5,6 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Percival">
     <title>Creación de la BD</title>
+    <style> 
+         /* estilos */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 40px;
+    color: #333;
+}
+
+.log-container {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    border-top: 5px solid #007bff; /* mantiene coherencia de color */
+}
+
+/* estilo para cada linea de mensaje de php */
+body {
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+.success-msg {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.error-msg {
+    color: #dc3545;
+    background: #fff5f5;
+    padding: 5px;
+    border-radius: 4px;
+}   
+    </style>
 </head>
 <body>
 <?php

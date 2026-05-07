@@ -79,8 +79,8 @@ $opcion = $_GET['opcion'] ?? '';
             <h3>Nueva Serie</h3>
             <form method="POST">
                 <input type="hidden" name="tabla" value="series">
-                Título de la serie: <input type="text" name="titulo" required maxlength="20">
-                Breve descripción: <input type="text" name="descripcion" required maxlength="100">
+                Título de la serie: <input type="text" name="titulo" required maxlength="80">
+                Breve descripción: <input type="text" name="descripcion" required maxlength="200">
                 <button type="submit">Guardar Serie</button>
             </form>
         </div>

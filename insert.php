@@ -44,10 +44,79 @@ $opcion = $_GET['opcion'] ?? '';
     <meta name="author" content="Percival">
     <title>Insertar Datos - Todo Check</title>
     <style>
-        body { font-family: sans-serif; margin: 20px; }
-        nav { margin-bottom: 20px; padding: 10px; background: #f4f4f4; }
-        .formulario { border: 1px solid #ccc; padding: 15px; width: 300px; }
-        input { margin-bottom: 10px; display: block; width: 90%; }
+        /* estilos */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+nav {
+    background: #e9ecef;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.formulario {
+    background: white;
+    border: 1px solid #dee2e6;
+    padding: 20px;
+    width: 320px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin: 0 auto;
+}
+
+/* titulos dentro del formulario o página */
+h2 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+input {
+    margin-bottom: 15px;
+    display: block;
+    width: 100%; /* ocupa el ancho total del contenedor .formulario */
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box; /* para que el padding no rompa el ancho */
+    font-family: inherit;
+}
+
+input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Estilo botón de envío*/
+button, input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #0056b3;
+}
     </style>
 </head>
 <body>

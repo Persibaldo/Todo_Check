@@ -17,7 +17,7 @@ function ejecutarInsercion($con, $tabla, $datos) {
     } else {
         $titulo = mysqli_real_escape_string($con, $datos['titulo']);
         $desc = mysqli_real_escape_string($con, $datos['descripcion']); // Corrección de sintaxis añadida
-        $sql = "INSERT INTO series (titulo, descripcion) VALUES ('$titulo', '$descripcion')";
+        $sql = "INSERT INTO series (titulo, descripcion) VALUES ('$titulo', '$desc')";
     }
     return mysqli_query($con, $sql);
 }

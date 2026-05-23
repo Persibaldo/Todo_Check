@@ -1,0 +1,166 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:"Segoe UI",sans-serif;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:#1e293b;
+}
+
+/* =========================
+   SIDEBAR FIJO
+========================= */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+
+    width:250px;
+    height:100vh;
+
+    background:#0f172a;
+
+    padding:20px;
+
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+
+    box-shadow:5px 0 20px rgba(0,0,0,.4);
+}
+
+.sidebar h2{
+    color:white;
+    margin-bottom:10px;
+    text-align:center;
+}
+
+.sidebar a{
+    text-decoration:none;
+
+    background:#1e293b;
+    color:#e2e8f0;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.sidebar a:hover{
+    background:#2563eb;
+    transform:translateX(5px);
+}
+
+.btn-back{
+    margin-top:auto;
+    background:#dc2626 !important;
+    color:white !important;
+}
+
+.btn-back:hover{
+    background:#b91c1c !important;
+}
+
+/* =========================
+   CONTENIDO
+========================= */
+
+.content{
+    margin-left:270px;
+    padding:40px;
+}
+
+.content h1{
+    color:white;
+    margin-bottom:30px;
+    font-size:2.5rem;
+    text-align:center;
+}
+
+/* =========================
+   SECCIONES
+========================= */
+
+.categoria{
+    background:white;
+
+    margin-bottom:40px;
+
+    padding:25px;
+
+    border-radius:20px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.2);
+}
+
+.categoria h2{
+    margin-bottom:20px;
+    border-bottom:3px solid #2563eb;
+    padding-bottom:10px;
+}
+
+/* =========================
+   TABLA
+========================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead{
+    background:#2563eb;
+    color:white;
+}
+
+th{
+    padding:14px;
+    text-align:left;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+tbody tr:nth-child(even){
+    background:#f8fafc;
+}
+
+tbody tr:hover{
+    background:#dbeafe;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+
+        flex-direction:row;
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    .content{
+        margin-left:0;
+        padding:20px;
+    }
+}

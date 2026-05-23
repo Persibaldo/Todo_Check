@@ -59,48 +59,135 @@ if (!$conexion) {
 }
 
 // 2. Crear BD
-$sql = "CREATE DATABASE IF NOT EXISTS todo_check";
-if (mysqli_query($conexion, $sql)) {
-    echo "Base de datos creada o ya existente.<br>";
+// --- TABLA USUARIOS ---
+$sql_usuarios = "CREATE TABLE IF NOT EXISTS usuarios (
+    id_usuario INT NOT NULL AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    contraseña varchar(20),
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_usuario)
+)";
+if (mysqli_query($conexion, $sql_usuarios)) {
+    echo "Tabla 'usuarios' lista.<br>";
 } else {
-    echo "Error creando BD: " . mysqli_error($conexion) . "<br>";
+    echo "Error al crear tabla usuarios: " . mysqli_error($conexion) . "<br>";
 }
 
-// 3. Seleccionar la BD
-mysqli_select_db($conexion, "todo_check");
+// --- TABLA GENEROS ---
+$sql_generos = "CREATE TABLE IF NOT EXISTS generos (
+    id_genero INT NOT NULL AUTO_INCREMENT,
+    nombre_genero VARCHAR(50) NOT NULL UNIQUE,
+    PRIMARY KEY (id_genero)
+)";
+if (mysqli_query($conexion, $sql_generos)) {
+    echo "Tabla 'generos' lista.<br>";
+}
+
+// --- TABLA PELIS ---
+$sql_pelis = "CREATE TABLE IF NOT EXISTS pelis (
+    id_peli INT NOT NULL AUTO_INCREMENT,
+    titulo VARCHAR(255) NOT NULL,
+    director VARCHAR(100),
+    duracion_min INT,
+    PRIMARY KEY (id_peli)
+)";
+if (mysqli_query($conexion, $sql_pelis)) {
+    echo "Tabla 'pelis' lista.<br>";
+}
 
 // --- TABLA SERIES ---
-$sql2 = "CREATE TABLE IF NOT EXISTS series(
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    titulo VARCHAR(20), 
-    descripcion VARCHAR(100)
+$sql_series = "CREATE TABLE IF NOT EXISTS series (
+    id_serie INT NOT NULL AUTO_INCREMENT,
+    titulo VARCHAR(255) NOT NULL,
+    temporadas INT,
+    en_emision BOOLEAN,
+    PRIMARY KEY (id_serie)
 )";
-
-if (mysqli_query($conexion, $sql2)) {
-    echo "Tabla series lista.<br>";
-    
-    // Verificar si está vacía antes de insertar
-    $checkSeries = mysqli_query($conexion, "SELECT id FROM series LIMIT 1");
-    if (mysqli_num_rows($checkSeries) == 0) {
-        $sql3 = "INSERT INTO series (titulo, descripcion) VALUES 
-                ('The Mandalorian', 'Acción en la galaxia.'),
-                ('Friends', 'Comedia de amigos en NY.')";
-        mysqli_query($conexion, $sql3);
-        echo "Datos de ejemplo en 'series' cargados.<br>";
-    }
-} else {
-    echo "Error al crear tabla series: " . mysqli_error($conexion) . "<br>";
+if (mysqli_query($conexion, $sql_series)) {
+    echo "Tabla 'series' lista.<br>";
 }
 
-// --- TABLA USUARIOS ---
-$sql4 = "CREATE TABLE IF NOT EXISTS usuarios(
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    nombre VARCHAR(20), 
-    contraseña VARCHAR(255)
+// --- TABLA ANIME ---
+$sql_anime = "CREATE TABLE IF NOT EXISTS anime (
+    id_anime INT NOT NULL AUTO_INCREMENT,
+    titulo VARCHAR(255) NOT NULL,
+    estudio VARCHAR(100),
+    episodios INT,
+    PRIMARY KEY (id_anime)
 )";
+if (mysqli_query($conexion, $sql_anime)) {
+    echo "Tabla 'anime' lista.<br>";
+}
 
-if (mysqli_query($conexion, $sql4)) {
-    echo "Tabla usuarios lista.<br>";
+// --- TABLA LIBROS ---
+$sql_libros = "CREATE TABLE IF NOT EXISTS libros (
+    id_libro INT NOT NULL AUTO_INCREMENT,
+    titulo VARCHAR(255) NOT NULL,
+    autor VARCHAR(100),
+    paginas INT,
+    PRIMARY KEY (id_libro)
+)";
+if (mysqli_query($conexion, $sql_libros)) {
+    echo "Tabla 'libros' lista.<br>";
+}
+
+// --- TABLA JUEGOS ---
+$sql_juegos = "CREATE TABLE IF NOT EXISTS juegos (
+    id_juego INT NOT NULL AUTO_INCREMENT,
+    titulo VARCHAR(255) NOT NULL,
+    plataforma VARCHAR(100),
+    desarrollador VARCHAR(100),
+    PRIMARY KEY (id_juego)
+)";
+if (mysqli_query($conexion, $sql_juegos)) {
+    echo "Tabla 'juegos' lista.<br>";
+}
+
+
+// ==========================================
+// CREACIÓN DE TABLAS PUENTE (Relaciones N:M)
+// ==========================================
+
+$sql_peli_generos = "CREATE TABLE IF NOT EXISTS peli_generos (
+    id_peli INT NOT NULL, id_genero INT NOT NULL,
+    PRIMARY KEY (id_peli, id_genero),
+    FOREIGN KEY (id_peli) REFERENCES pelis(id_peli) ON DELETE CASCADE,
+    FOREIGN KEY (id_genero) REFERENCES generos(id_genero) ON DELETE CASCADE
+)";
+if (mysqli_query($conexion, $sql_peli_generos)) echo "Tabla puente 'peli_generos' lista.<br>";
+
+$sql_serie_generos = "CREATE TABLE IF NOT EXISTS serie_generos (
+    id_serie INT NOT NULL, id_genero INT NOT NULL,
+    PRIMARY KEY (id_serie, id_genero),
+    FOREIGN KEY (id_serie) REFERENCES series(id_serie) ON DELETE CASCADE,
+    FOREIGN KEY (id_genero) REFERENCES generos(id_genero) ON DELETE CASCADE
+)";
+if (mysqli_query($conexion, $sql_serie_generos)) echo "Tabla puente 'serie_generos' lista.<br>";
+
+$sql_anime_generos = "CREATE TABLE IF NOT EXISTS anime_generos (
+    id_anime INT NOT NULL, id_genero INT NOT NULL,
+    PRIMARY KEY (id_anime, id_genero),
+    FOREIGN KEY (id_anime) REFERENCES anime(id_anime) ON DELETE CASCADE,
+    FOREIGN KEY (id_genero) REFERENCES generos(id_genero) ON DELETE CASCADE
+)";
+if (mysqli_query($conexion, $sql_anime_generos)) echo "Tabla puente 'anime_generos' lista.<br>";
+
+$sql_libro_generos = "CREATE TABLE IF NOT EXISTS libro_generos (
+    id_libro INT NOT NULL, id_genero INT NOT NULL,
+    PRIMARY KEY (id_libro, id_genero),
+    FOREIGN KEY (id_libro) REFERENCES libros(id_libro) ON DELETE CASCADE,
+    FOREIGN KEY (id_genero) REFERENCES generos(id_genero) ON DELETE CASCADE
+)";
+if (mysqli_query($conexion, $sql_libro_generos)) echo "Tabla puente 'libro_generos' lista.<br>";
+
+$sql_juego_generos = "CREATE TABLE IF NOT EXISTS juego_generos (
+    id_juego INT NOT NULL, id_genero INT NOT NULL,
+    PRIMARY KEY (id_juego, id_genero),
+    FOREIGN KEY (id_juego) REFERENCES juegos(id_juego) ON DELETE CASCADE,
+    FOREIGN KEY (id_genero) REFERENCES generos(id_genero) ON DELETE CASCADE
+)";
+if (mysqli_query($conexion, $sql_juego_generos)) echo "Tabla puente 'juego_generos' lista.<br>";
     
     // Verificar si está vacía antes de insertar
     $checkUsers = mysqli_query($conexion, "SELECT id FROM usuarios LIMIT 1");

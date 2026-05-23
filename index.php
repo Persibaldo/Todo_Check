@@ -68,6 +68,11 @@ button:hover {
         <select name="tabla">
             <option value="usuarios">Usuarios</option>
             <option value="series">Series</option>
+            <option value="series">Juegos</option>
+            <option value="series">Anime</option>
+            <option value="series">Libros</option>
+            <option value="series">Películas</option>
+            <option value="series">Géneros</option>
         </select>
         <button type="submit">Continuar</button>
     </form>

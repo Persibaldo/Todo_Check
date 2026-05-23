@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tabla'])) {
     if ($tabla_post == 'usuarios') {
         $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']);
         $email = mysqli_real_escape_string($conexion, $_POST['email']);
-        $contra = password_hash($_POST['contra'], PASSWORD_DEFAULT);
+        $contra = mysqli_real_escape_string($conexion, $_POST['contra']);
         $sql = "INSERT INTO usuarios (nombre, email, contraseña) VALUES ('$nombre', '$email', '$contra')";
     } 
     elseif ($tabla_post == 'generos') {

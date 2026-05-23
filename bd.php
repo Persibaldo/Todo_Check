@@ -59,6 +59,12 @@ if (!$conexion) {
 }
 
 // 2. Crear BD
+
+if (!mysqli_query($conexion, "CREATE DATABASE IF NOT EXISTS todo_check")) {
+    die("Error al crear la base de datos: " . mysqli_error($conexion));
+}
+mysqli_select_db($conexion, 'todo_check');
+
 // --- TABLA USUARIOS ---
 $sql_usuarios = "CREATE TABLE IF NOT EXISTS usuarios (
     id_usuario INT NOT NULL AUTO_INCREMENT,

@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tabla'])) {
         $sql = "INSERT INTO anime (titulo, estudio, episodios) VALUES ('$titulo', '$estudio', $episodios)";
     } 
     elseif ($tabla_post == 'libros') {
-        $titulo = mysqli_real_escape_string($titulo, $_POST['titulo']);
+        $titulo = mysqli_real_escape_string($conexion, $_POST['titulo']);
         $autor = mysqli_real_escape_string($conexion, $_POST['autor']);
         $paginas = intval($_POST['paginas']);
         $sql = "INSERT INTO libros (titulo, autor, paginas) VALUES ('$titulo', '$autor', $paginas)";

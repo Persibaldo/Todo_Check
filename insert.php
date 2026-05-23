@@ -98,7 +98,7 @@ $tabla = $_GET['tabla'] ?? $_GET['opcion'] ?? '';
         <a href="?tabla=anime">Anime</a> | 
         <a href="?tabla=libros">Libros</a> | 
         <a href="?tabla=juegos">Juegos</a> |
-        <a href="ver.php" style="color: #28a745;">&#128065; Ver datos existentes</a>
+        <a href="ver.php?tabla=<?php echo $tabla; ?>"" style="color: #28a745;">&#128065; Ver datos existentes</a>
     </nav>
 
     <div style="text-align: center;">

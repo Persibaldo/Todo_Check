@@ -286,5 +286,11 @@ if ($checkRelaciones && mysqli_num_rows($checkRelaciones) == 0) {
 
 mysqli_close($conexion);
 ?>
+<!-- Botón para volver al índice -->
+    <div style="margin-top: 30px; text-align: center;">
+        <a href="index.php" style="display: inline-block; background-color: #007bff; color: white; padding: 12px 25px; border-radius: 6px; text-decoration: none; font-weight: bold; font-family: sans-serif;">
+            Volver al Panel Principal
+        </a>
+    </div>
 </body>
 </html>

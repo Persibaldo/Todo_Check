@@ -27,6 +27,11 @@
     <div class="panel">
         <h1>Bienvenido a Todo_Check</h1>
 
+        <!-- Botón para inicializar la base de datos -->
+<a href="bd.php" style="display: block; background-color: #6c757d; color: white; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-bottom: 25px; text-align: center;">
+    Inicializar / Restaurar Base de Datos
+</a>
+
         <!-- Vista de Usuario (Enlace directo) -->
         <a href="catalogo.php" class="btn-usuario">Ver Catálogo Público</a>
 

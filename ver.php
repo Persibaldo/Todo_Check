@@ -1,84 +1,198 @@
 <?php
-// Lista de todas las tablas permitidas
-$tablas_validas = ['usuarios', 'generos', 'pelis', 'series', 'anime', 'libros', 'juegos'];
-$tabla = $_GET['tabla'] ?? 'usuarios';
+// 1. Configuración de conexión
+$servidor = "localhost:3307";
+$usuario  = "root";
+$pass     = "";
+$base     = "todo_check";
 
-if (!in_array($tabla, $tablas_validas, true)) {
-    $tabla = 'usuarios';
-}
+$conexion = mysqli_connect($servidor, $usuario, $pass, $base) or die("Error de conexión");
 
-$conexion = mysqli_connect('localhost:3307', 'root', '', 'todo_check');
-if (!$conexion) {
-    die("Error de conexión: " . mysqli_connect_error());
-}
+// 2. Lógica de guardado lineal (solo si se envió el formulario POST)
+$mensaje = "";
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tabla'])) {
+    $tabla_post = $_POST['tabla'];
+    $sql = "";
 
-$pk = ($tabla == 'usuarios') ? 'id_usuario' : 'id_' . substr($tabla, 0, -1);
-// Ajuste especial para plurales irregulares
-if ($tabla == 'series') $pk = 'id_serie';
-if ($tabla == 'libros') $pk = 'id_libro';
-if ($tabla == 'juegos') $pk = 'id_juego';
-
-// --- ACCIONES POST ---
-if (isset($_POST['borrar_id'])) {
-    $id = intval($_POST['borrar_id']);
-    $query = "DELETE FROM $tabla WHERE $pk = $id";
-    if (!mysqli_query($conexion, $query)) {
-        echo "<script>alert('Error al borrar: Verifica que no existan registros relacionados.');</script>";
-    }
-    header("Location: ?tabla=$tabla");
-    exit;
-}
-
-if (isset($_POST['actualizar'])) {
-    $id = intval($_POST['id']);
-    if ($tabla == 'usuarios') {
+    if ($tabla_post == 'usuarios') {
         $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']);
         $email = mysqli_real_escape_string($conexion, $_POST['email']);
-        // Solo actualizar contraseña si se escribe algo nuevo
-        if (!empty($_POST['contra'])) {
-            $contra = password_hash($_POST['contra'], PASSWORD_DEFAULT);
-            $query = "UPDATE usuarios SET nombre='$nombre', email='$email', contraseña='$contra' WHERE id_usuario=$id";
-        } else {
-            $query = "UPDATE usuarios SET nombre='$nombre', email='$email' WHERE id_usuario=$id";
-        }
+        $contra = password_hash($_POST['contra'], PASSWORD_DEFAULT);
+        $sql = "INSERT INTO usuarios (nombre, email, contraseña) VALUES ('$nombre', '$email', '$contra')";
     } 
-    elseif ($tabla == 'generos') {
+    elseif ($tabla_post == 'generos') {
         $nombre_genero = mysqli_real_escape_string($conexion, $_POST['nombre_genero']);
-        $query = "UPDATE generos SET nombre_genero='$nombre_genero' WHERE id_genero=$id";
+        $sql = "INSERT INTO generos (nombre_genero) VALUES ('$nombre_genero')";
     } 
-    elseif ($tabla == 'pelis') {
+    elseif ($tabla_post == 'pelis') {
         $titulo = mysqli_real_escape_string($conexion, $_POST['titulo']);
         $director = mysqli_real_escape_string($conexion, $_POST['director']);
         $duracion = intval($_POST['duracion_min']);
-        $query = "UPDATE pelis SET titulo='$titulo', director='$director', duracion_min=$duracion WHERE id_peli=$id";
+        $sql = "INSERT INTO pelis (titulo, director, duracion_min) VALUES ('$titulo', '$director', $duracion)";
     } 
-    elseif ($tabla == 'series') {
+    elseif ($tabla_post == 'series') {
         $titulo = mysqli_real_escape_string($conexion, $_POST['titulo']);
         $temporadas = intval($_POST['temporadas']);
         $en_emision = intval($_POST['en_emision']);
-        $query = "UPDATE series SET titulo='$titulo', temporadas=$temporadas, en_emision=$en_emision WHERE id_serie=$id";
+        $sql = "INSERT INTO series (titulo, temporadas, en_emision) VALUES ('$titulo', $temporadas, $en_emision)";
     } 
-    elseif ($tabla == 'anime') {
+    elseif ($tabla_post == 'anime') {
         $titulo = mysqli_real_escape_string($conexion, $_POST['titulo']);
         $estudio = mysqli_real_escape_string($conexion, $_POST['estudio']);
         $episodios = intval($_POST['episodios']);
-        $query = "UPDATE anime SET titulo='$titulo', estudio='$estudio', episodios=$episodios WHERE id_anime=$id";
+        $sql = "INSERT INTO anime (titulo, estudio, episodios) VALUES ('$titulo', '$estudio', $episodios)";
     } 
-    elseif ($tabla == 'libros') {
-        $titulo = mysqli_real_escape_string($conexion, $_POST['titulo']);
+    elseif ($tabla_post == 'libros') {
+        $titulo = mysqli_real_escape_string($titulo, $_POST['titulo']);
         $autor = mysqli_real_escape_string($conexion, $_POST['autor']);
         $paginas = intval($_POST['paginas']);
-        $query = "UPDATE libros SET titulo='$titulo', autor='$autor', paginas=$paginas WHERE id_libro=$id";
+        $sql = "INSERT INTO libros (titulo, autor, paginas) VALUES ('$titulo', '$autor', $paginas)";
     } 
-    elseif ($tabla == 'juegos') {
+    elseif ($tabla_post == 'juegos') {
         $titulo = mysqli_real_escape_string($conexion, $_POST['titulo']);
         $plataforma = mysqli_real_escape_string($conexion, $_POST['plataforma']);
         $desarrollador = mysqli_real_escape_string($conexion, $_POST['desarrollador']);
-        $query = "UPDATE juegos SET titulo='$titulo', plataforma='$plataforma', desarrollador='$desarrollador' WHERE id_juego=$id";
+        $sql = "INSERT INTO juegos (titulo, plataforma, desarrollador) VALUES ('$titulo', '$plataforma', '$desarrollador')";
     }
-    mysqli_query($conexion, $query);
-    header("Location: ?tabla=$tabla");
-    exit;
+
+    if ($sql !== "") {
+        if (mysqli_query($conexion, $sql)) {
+            $mensaje = "<p style='color:green; font-weight:bold;'>Datos guardados correctamente en la tabla " . htmlspecialchars($tabla_post) . "</p>";
+        } else {
+            $mensaje = "<p style='color:red; font-weight:bold;'>Error al guardar: " . mysqli_error($conexion) . "</p>";
+        }
+    }
 }
+
+// 3. Determinar qué formulario mostrar (Prioridad a 'tabla', fallback a 'opcion')
+$tabla = $_GET['tabla'] ?? $_GET['opcion'] ?? '';
 ?>
-<!-- (El resto del HTML se mantiene igual, pero asegúrate de añadir el campo password en el bloque editar de usuarios) -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertar Datos - Todo Check</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f9f9f9; margin: 0; padding: 20px; color: #333; }
+        nav { background: #e9ecef; padding: 12px; border-radius: 6px; margin-bottom: 25px; display: flex; flex-wrap: wrap; gap: 15px; }
+        nav a { text-decoration: none; color: #007bff; font-weight: bold; }
+        nav a:hover { text-decoration: underline; }
+        .formulario { background: white; border: 1px solid #dee2e6; padding: 20px; width: 350px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin: 0 auto; }
+        h2 { color: #2c3e50; font-size: 1.5rem; margin-bottom: 15px; }
+        input, select { margin-bottom: 15px; display: block; width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #28a745; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+    <h1>Gestión de Base de Datos - Inserción</h1>
+    
+    <nav>
+        <strong>Selecciona tabla:</strong> 
+        <a href="?tabla=usuarios">Usuarios</a> | 
+        <a href="?tabla=generos">Géneros</a> | 
+        <a href="?tabla=pelis">Películas</a> | 
+        <a href="?tabla=series">Series</a> | 
+        <a href="?tabla=anime">Anime</a> | 
+        <a href="?tabla=libros">Libros</a> | 
+        <a href="?tabla=juegos">Juegos</a> |
+        <a href="ver.php" style="color: #28a745;">&#128065; Ver datos existentes</a>
+    </nav>
+
+    <div style="text-align: center;">
+        <?php echo $mensaje; ?>
+    </div>
+
+    <?php if ($tabla == 'usuarios'): ?>
+        <div class="formulario">
+            <h3>Nuevo Usuario</h3>
+            <form method="POST">
+                <input type="hidden" name="tabla" value="usuarios">
+                Nombre: <input type="text" name="nombre" required>
+                Email: <input type="email" name="email" required>
+                Contraseña: <input type="password" name="contra" required>
+                <button type="submit">Guardar Usuario</button>
+            </form>
+        </div>
+
+    <?php elseif ($tabla == 'generos'): ?>
+        <div class="formulario">
+            <h3>Nuevo Género</h3>
+            <form method="POST">
+                <input type="hidden" name="tabla" value="generos">
+                Nombre del género: <input type="text" name="nombre_genero" required>
+                <button type="submit">Guardar Género</button>
+            </form>
+        </div>
+
+    <?php elseif ($tabla == 'pelis'): ?>
+        <div class="formulario">
+            <h3>Nueva Película</h3>
+            <form method="POST">
+                <input type="hidden" name="tabla" value="pelis">
+                Título: <input type="text" name="titulo" required>
+                Director: <input type="text" name="director" required>
+                Duración (min): <input type="number" name="duracion_min" required>
+                <button type="submit">Guardar Película</button>
+            </form>
+        </div>
+
+    <?php elseif ($tabla == 'series'): ?>
+        <div class="formulario">
+            <h3>Nueva Serie</h3>
+            <form method="POST">
+                <input type="hidden" name="tabla" value="series">
+                Título: <input type="text" name="titulo" required>
+                Temporadas: <input type="number" name="temporadas" required>
+                En emisión?: 
+                <select name="en_emision"><option value="1">Sí</option><option value="0">No</option></select>
+                <button type="submit">Guardar Serie</button>
+            </form>
+        </div>
+
+    <?php elseif ($tabla == 'anime'): ?>
+        <div class="formulario">
+            <h3>Nuevo Anime</h3>
+            <form method="POST">
+                <input type="hidden" name="tabla" value="anime">
+                Título: <input type="text" name="titulo" required>
+                Estudio: <input type="text" name="estudio" required>
+                Episodios: <input type="number" name="episodios" required>
+                <button type="submit">Guardar Anime</button>
+            </form>
+        </div>
+
+    <?php elseif ($tabla == 'libros'): ?>
+        <div class="formulario">
+            <h3>Nuevo Libro</h3>
+            <form method="POST">
+                <input type="hidden" name="tabla" value="libros">
+                Título: <input type="text" name="titulo" required>
+                Autor: <input type="text" name="autor" required>
+                Páginas: <input type="number" name="paginas" required>
+                <button type="submit">Guardar Libro</button>
+            </form>
+        </div>
+
+    <?php elseif ($tabla == 'juegos'): ?>
+        <div class="formulario">
+            <h3>Nuevo Juego</h3>
+            <form method="POST">
+                <input type="hidden" name="tabla" value="juegos">
+                Título: <input type="text" name="titulo" required>
+                Plataforma: <input type="text" name="plataforma" required>
+                Desarrollador: <input type="text" name="desarrollador" required>
+                <button type="submit">Guardar Juego</button>
+            </form>
+        </div>
+
+    <?php else: ?>
+        <div style="text-align: center; margin-top: 50px;">
+            <p style="font-size: 1.2rem; color: #6c757d;">Por favor, elige una categoría en el menú superior.</p>
+        </div>
+    <?php endif; ?>
+
+</body>
+</html>

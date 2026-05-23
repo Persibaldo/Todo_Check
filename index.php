@@ -27,20 +27,17 @@
     <div class="panel">
         <h1>Bienvenido a Todo_Check</h1>
 
-        <!-- Botón para inicializar la base de datos -->
-<a href="bd.php" style="display: block; background-color: #6c757d; color: white; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-bottom: 25px; text-align: center;">
-    Inicializar / Restaurar Base de Datos
-</a>
+        <a href="bd.php" style="display: block; background-color: #6c757d; color: white; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-bottom: 25px; text-align: center;">
+            Inicializar / Restaurar Base de Datos
+        </a>
 
-        <!-- Vista de Usuario (Enlace directo) -->
         <a href="catalogo.php" class="btn-usuario">Ver Catálogo Público</a>
 
-        <!-- Vista de Administrador -->
         <div class="admin-section">
             <form method="GET">
                 <label>Administración de Datos</label>
-                <!-- Usamos opcion para insertar y tabla para ver -->
-                <select name="opcion">
+                
+                <select name="tabla">
                     <option value="usuarios">Usuarios</option>
                     <option value="series">Series</option>
                     <option value="juegos">Juegos</option>
@@ -51,10 +48,8 @@
                 </select>
                 
                 <div class="btn-group">
-                    <!-- Cada botón envía el formulario a un archivo distinto -->
                     <button type="submit" formaction="insert.php" class="btn-insert">Insertar</button>
-                    <button type="submit" formaction="ver.php" name="tabla" value="usuarios" class="btn-ver" 
-                            onclick="this.value=this.form.opcion.value">Editar/Borrar</button>
+                    <button type="submit" formaction="ver.php" class="btn-ver">Editar/Borrar</button>
                 </div>
             </form>
         </div>

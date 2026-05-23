@@ -282,6 +282,27 @@ if ($checkRelaciones && mysqli_num_rows($checkRelaciones) == 0) {
     $ins_jg = "INSERT INTO juego_generos (id_juego, id_genero) VALUES (1,2),(2,26),(3,26),(4,1),(5,2),(6,1),(7,18),(8,27),(9,26),(10,25),(11,26),(12,5),(13,1),(14,1),(15,26),(16,1),(17,28),(18,27),(19,26),(20,26),(21,20),(22,3),(23,28),(24,27),(25,26),(26,1),(27,2),(28,27),(29,1),(30,28)";
     if (mysqli_query($conexion, $ins_jg)) echo "Relaciones 'juego_generos' cargadas.<br>";
 }   
+
+// ==========================================
+// CREACIÓN DE LA VISTA (Catalogo consolidado)
+// ==========================================
+
+$sql_vista = "CREATE OR REPLACE VIEW biblioteca_total AS 
+              SELECT titulo, 'Peli' as tipo, id_genero FROM pelis 
+              UNION ALL 
+              SELECT titulo, 'Serie' as tipo, id_genero FROM series 
+              UNION ALL 
+              SELECT titulo, 'Anime' as tipo, id_genero FROM anime 
+              UNION ALL 
+              SELECT titulo, 'Libro' as tipo, id_genero FROM libros 
+              UNION ALL 
+              SELECT titulo, 'Juego' as tipo, id_genero FROM juegos";
+
+if (mysqli_query($conexion, $sql_vista)) {
+    echo "Vista 'biblioteca_total' actualizada correctamente.<br>";
+} else {
+    echo "Error al crear la vista: " . mysqli_error($conexion) . "<br>";
+}
 // Cerrar conexion
 
 mysqli_close($conexion);

@@ -1,17 +1,43 @@
 <?php
-$servidor = "localhost:3307"; // Asegúrate de que este puerto coincida con tu XAMPP
+// 1. Configuración de conexión (Asegúrate de que el puerto coincida con tu XAMPP, ej: 3306 o 3307)
+$servidor = "localhost:3307"; 
 $usuario  = "root";
 $pass     = "";
 $base     = "todo_check";
 
-$conexion = mysqli_connect($servidor, $usuario, $pass, $base) or die("Error de conexión: " . mysqli_connect_error());
+$conexion = mysqli_connect($servidor, $usuario, $pass, $base) 
+    or die("Error de conexión: " . mysqli_connect_error());
 
-// Consulta unificada
-$query = "SELECT titulo, tipo, IFNULL(nombre_genero, 'Sin género') as nombre_genero 
+// 2. Consulta de datos
+$query = "SELECT titulo, tipo, IFNULL(nombre_genero, 'Sin género') AS nombre_genero 
           FROM biblioteca_total 
           ORDER BY tipo ASC, titulo ASC";
 
 $resultado = mysqli_query($conexion, $query);
+
+// 3. Agrupación de datos en el array $catalogo
+$catalogo = [];
+while ($fila = mysqli_fetch_assoc($resultado)) {
+    $catalogo[$fila['tipo']][] = $fila;
+}
+
+// 4. Función de ayuda para iconos y formato
+function tipoBonito($tipo){
+    switch(strtolower($tipo)){
+        case 'peli': case 'pelis': case 'pelicula': case 'peliculas':
+            return "🎬 Películas";
+        case 'serie': case 'series':
+            return "📺 Series";
+        case 'anime':
+            return "🌸 Anime";
+        case 'libro': case 'libros':
+            return "📚 Libros";
+        case 'juego': case 'juegos':
+            return "🎮 Juegos";
+        default:
+            return "📦 " . ucfirst($tipo);
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,39 +45,52 @@ $resultado = mysqli_query($conexion, $query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo - Todo Check</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f9f9f9; padding: 40px; color: #333; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .tipo-badge { background: #007bff; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; }
-        .btn-volver { display: inline-block; margin-top: 20px; padding: 10px 15px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px; }
-    </style>
+    <title>Catálogo - Todo_Check</title>
+    <link rel="stylesheet" href="css/catalogo.css">
 </head>
+
 <body>
-<div class="container">
-    <h1>Catálogo Completo</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Tipo</th>
-                <th>Título</th>
-                <th>Género</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($fila = mysqli_fetch_assoc($resultado)): ?>
-                <tr>
-                    <td><span class="tipo-badge"><?php echo htmlspecialchars($fila['tipo']); ?></span></td>
-                    <td><?php echo htmlspecialchars($fila['titulo']); ?></td>
-                    <td><?php echo htmlspecialchars($fila['nombre_genero']); ?></td>
-                </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
-    <a href="index.php" class="btn-volver">Volver al Panel</a>
+
+<nav class="sidebar">
+    <h2>📚 Catálogo</h2>
+    
+    <?php foreach ($catalogo as $tipo => $items): ?>
+        <a href="#<?= strtolower(str_replace(' ', '-', $tipo)) ?>">
+            <?= tipoBonito($tipo) ?>
+        </a>
+    <?php endforeach; ?>
+
+    <a class="btn-back" href="index.php">← Volver al Panel</a>
+</nav>
+
+<div class="content">
+    <h1>📚 Catálogo Todo_Check</h1>
+
+    <?php foreach ($catalogo as $tipo => $items): ?>
+        <section class="categoria" id="<?= strtolower(str_replace(' ', '-', $tipo)) ?>">
+            
+            <h2><?= tipoBonito($tipo) ?></h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Género</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($items as $item): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($item['titulo']) ?></td>
+                            <td><?= htmlspecialchars($item['nombre_genero']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+        </section>
+    <?php endforeach; ?>
 </div>
+
 </body>
 </html>

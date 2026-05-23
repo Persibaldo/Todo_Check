@@ -34,7 +34,7 @@
         <div class="admin-section">
             <form method="GET">
                 <label>Administración de Datos</label>
-                <!-- Usamos 'opcion' para insertar y 'tabla' para ver, según tus archivos actuales -->
+                <!-- Usamos opcion para insertar y tabla para ver -->
                 <select name="opcion">
                     <option value="usuarios">Usuarios</option>
                     <option value="series">Series</option>

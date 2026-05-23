@@ -1,0 +1,199 @@
+/* ===== RESET ===== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== BODY ===== */
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+/* ===== CONTENEDOR ===== */
+
+.container {
+    width: 100%;
+    max-width: 500px;
+}
+
+/* ===== PANEL ===== */
+
+.panel {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.2);
+
+    animation: fadeIn 0.5s ease;
+}
+
+/* ===== TITULOS ===== */
+
+.panel h1 {
+    text-align: center;
+    color: #1e293b;
+    margin-bottom: 10px;
+    font-size: 2rem;
+}
+
+.subtitle {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+/* ===== BOTONES ===== */
+
+.btn {
+    display: block;
+    width: 100%;
+
+    text-align: center;
+    text-decoration: none;
+
+    padding: 14px;
+    margin-bottom: 15px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    color: white;
+
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+/* ===== BOTONES ESPECÍFICOS ===== */
+
+.btn-database {
+    background: #475569;
+}
+
+.btn-database:hover {
+    background: #334155;
+}
+
+.btn-public {
+    background: #16a34a;
+}
+
+.btn-public:hover {
+    background: #15803d;
+}
+
+.btn-insert {
+    background: #2563eb;
+}
+
+.btn-insert:hover {
+    background: #1d4ed8;
+}
+
+.btn-edit {
+    background: #dc2626;
+}
+
+.btn-edit:hover {
+    background: #b91c1c;
+}
+
+/* ===== ADMIN ===== */
+
+.admin-section {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 2px solid #e5e7eb;
+}
+
+.admin-section h2 {
+    text-align: center;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    color: #374151;
+    font-weight: 600;
+}
+
+/* ===== SELECT ===== */
+
+select {
+    width: 100%;
+    padding: 12px;
+
+    border: 2px solid #d1d5db;
+    border-radius: 10px;
+
+    font-size: 15px;
+
+    margin-bottom: 20px;
+
+    outline: none;
+    transition: 0.3s;
+}
+
+select:focus {
+    border-color: #2563eb;
+}
+
+/* ===== GRUPO BOTONES ===== */
+
+.btn-group {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-group .btn {
+    margin-bottom: 0;
+}
+
+/* ===== ANIMACIÓN ===== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 500px) {
+
+    .panel {
+        padding: 25px;
+    }
+
+    .btn-group {
+        flex-direction: column;
+    }
+}
